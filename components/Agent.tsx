@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { vapi } from '@/lib/vapi.sdk'; 
 import { interviewer } from '@/constants';
+import { createFeedback } from '@/lib/actions/general.action';
 
 
 enum CallStatus{
@@ -63,10 +64,13 @@ const Agent = ({userName,userId,type,interviewId,questions}:AgentProps) => {
     const handleGenerateFeedback = async (message:SavedMessage[])=>{
         console.log('Generate feedback here.');
 
-        const {success,id}={
-            success:true,
-            id:'feedback-id'
-        }
+        const {success,feedbackId:id}= await createFeedback({
+            interviewId:interviewId!,
+            userId:userId!,
+            transcript:message,
+
+
+        })
         if(success && id){
             router.push(`/interview/${interviewId}/feedback`);
         }else{
@@ -135,7 +139,7 @@ const Agent = ({userName,userId,type,interviewId,questions}:AgentProps) => {
         </div>
         <div className='card-border'>
             <div className='card-content'>
-                <Image src="/user-avatar.png" alt='user avatar' width={540} height={540} className='object-cover rounded-full size-[120px]'/>
+                <Image src="/useme.png" alt='user' width={540} height={540} className='object-cover rounded-full size-[120px]'/>
                 <h3>{userName}</h3>
             </div>
         </div>
